@@ -20,7 +20,7 @@ class CreateAppointmentService {
         );
 
         if (findAppointmentInSameDate) {
-            throw Error('Este hoário já está agendado!');
+            throw Error('Este horário já está agendado!');
         }
 
         const appointmentTemp = appointmentsRepository.create({
