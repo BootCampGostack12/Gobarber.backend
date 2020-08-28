@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import User from '../models/User';
+import authConfig from '../config/auth';
 
 interface RequestDTO {
     password: string;
@@ -29,10 +30,12 @@ class CreateSessionsService {
         if (!hashPassword) {
             throw new Error('Email ou senha incorreta!');
         }
-        // payload.secret_key.
-        const token = sign({}, '761b21b02d88d0bb1df2785dd5fdfbf9', {
+
+        const { secret, expiresIn } = authConfig.jwt;
+
+        const token = sign({}, secret, {
             subject: user.id,
-            expiresIn: '1d',
+            expiresIn,
         });
 
         return { user, token };
