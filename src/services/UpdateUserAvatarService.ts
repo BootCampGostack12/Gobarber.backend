@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import User from '../models/User';
 import uploadConfig from '../config/upload';
+import AppError from '../errors/AppError';
 
 interface ResquestDTO {
     user_id: string;
@@ -22,8 +23,9 @@ class UpdateUserAvatarService {
         });
 
         if (!user) {
-            throw new Error(
+            throw new AppError(
                 'O usu[ario logado não tem permissões para alterar a foto de perfil',
+                401,
             );
         }
 

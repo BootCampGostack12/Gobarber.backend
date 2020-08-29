@@ -3,6 +3,7 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 import authConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 interface RequestDTO {
     password: string;
@@ -23,12 +24,12 @@ class CreateSessionsService {
         });
 
         if (!user) {
-            throw new Error('Email ou senha incorreta!');
+            throw new AppError('Email ou senha incorreta!', 401);
         }
         const hashPassword = await compare(password, user.password);
 
         if (!hashPassword) {
-            throw new Error('Email ou senha incorreta!');
+            throw new AppError('Email ou senha incorreta!', 401);
         }
 
         const { secret, expiresIn } = authConfig.jwt;

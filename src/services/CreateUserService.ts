@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 import User from '../models/User';
+import AppError from '../errors/AppError';
 
 interface RequestDTO {
     name: string;
@@ -17,7 +18,7 @@ class CreateAppointmentService {
         });
 
         if (emailExists) {
-            throw new Error('O email inserido já estã cadastrado!');
+            throw new AppError('O email inserido já estã cadastrado!');
         }
         const hashPassword = await hash(password, 8);
 
