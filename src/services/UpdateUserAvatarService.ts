@@ -17,7 +17,9 @@ class UpdateUserAvatarService {
     }: ResquestDTO): Promise<User> {
         const usersRepository = getRepository(User);
 
-        const user = await usersRepository.findOne(user_id);
+        const user = await usersRepository.findOne({
+            where: { id: user_id },
+        });
 
         if (!user) {
             throw new Error(
