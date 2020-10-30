@@ -1,24 +1,21 @@
-/* eslint-disable camelcase */
-import { getRepository } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
-import User from '@modules/users/infra/typeorm/entities/User';
+
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
+import User from '../infra/typeorm/entities/User';
+import IUsersRepository from '../repositories/IUsersRepository';
 
-interface ResquestDTO {
+interface IResquest {
   user_id: string;
   avatarFileName: string;
 }
 
 class UpdateUserAvatarService {
-  public async execute({
-    user_id,
-    avatarFileName,
-  }: ResquestDTO): Promise<User> {
-    const usersRepository = getRepository(User);
+  constructor(private usersRepository: IUsersRepository) {}
 
-    const user = await usersRepository.findOne({ where: { id: user_id } });
+  public async execute({ user_id, avatarFileName }: IResquest): Promise<User> {
+    const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
       throw new AppError(
@@ -39,7 +36,8 @@ class UpdateUserAvatarService {
 
     user.avatar = avatarFileName;
 
-    await usersRepository.save(user);
+    await this.usersRepository.save(user);
+
     return user;
   }
 }
